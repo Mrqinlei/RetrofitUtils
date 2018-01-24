@@ -283,7 +283,7 @@ public class MainActivity extends AppCompatActivity {
     private void download() {
         RetrofitUtils
                 .download()
-                .url("http:\\/\\/zhstatic.zhihu.com\\/pkg\\/store\\/daily\\/zhihu-daily-zhihu-2.6.0(744)-release.apk")
+                .url("http:\\\\zhstatic.zhihu.com\\pkg\\store\\daily\\zhihu-daily-zhihu-2.6.0(744)-release.apk")
                 .build()
                 .execute(new FileCallBack(getExternalFilesDir(DOWNLOAD_SERVICE), "知乎日报.apk") {
                     ProgressDialog progressDialog;
