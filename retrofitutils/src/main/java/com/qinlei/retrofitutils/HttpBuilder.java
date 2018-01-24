@@ -1,0 +1,51 @@
+package com.qinlei.retrofitutils;
+
+
+import com.qinlei.retrofitutils.call.RequestCall;
+
+import java.io.File;
+import java.util.WeakHashMap;
+
+/**
+ * Created by qinlei
+ * Created on 2018/1/12
+ * Created description : 网络请求的构建
+ */
+
+public class HttpBuilder {
+    private Object tag;
+    private String requestUrl;
+    private WeakHashMap<String, Object> params = new WeakHashMap<>();
+    private String content;
+    private WeakHashMap<String, File> uploads = new WeakHashMap<>();
+
+    public HttpBuilder tag(Object tag) {
+        this.tag = tag;
+        return this;
+    }
+
+    public HttpBuilder url(String url) {
+        this.requestUrl = url;
+        return this;
+    }
+
+    public HttpBuilder addParams(String key, Object value) {
+        params.put(key, value);
+        return this;
+    }
+
+    public HttpBuilder addFiles(String key, File value) {
+        uploads.put(key, value);
+        return this;
+    }
+
+    public HttpBuilder addBody(String jsonBody) {
+        content = jsonBody;
+        return this;
+    }
+
+    public RequestCall build() {
+        RetrofitUtils httpClient = new RetrofitUtils(tag, requestUrl, params, content, uploads);
+        return httpClient.build();
+    }
+}
