@@ -10,48 +10,48 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="get"
-        android:text="get" />
+        android:text="@string/get" />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="post"
-        android:text="post" />
+        android:text="@string/post" />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="postRaw"
-        android:text="postRaw" />
+        android:text="@string/postraw" />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="put"
-        android:text="put" />
+        android:text="@string/put" />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="putRaw"
-        android:text="putRaw" />
+        android:text="@string/putraw" />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="delete"
-        android:text="delete" />
+        android:text="@string/delete" />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="upload"
-        android:text="upload" />
+        android:text="@string/upload" />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="download"
-        android:text="download" />
+        android:text="@string/download" />
 
 </LinearLayout>

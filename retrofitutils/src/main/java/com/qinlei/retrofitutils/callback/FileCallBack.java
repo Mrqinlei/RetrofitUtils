@@ -8,6 +8,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.ref.WeakReference;
 
 import okhttp3.ResponseBody;
 import retrofit2.Response;
@@ -22,13 +23,14 @@ public abstract class FileCallBack extends BaseCallback<File> {
     private static final int DOWNLOAD = 101010;
     private static final int MAX_PROGRESS = 100;
     private File file;
-    private Handler handler = new MyHandler();
+    private Handler handler = null;
 
     public FileCallBack(File dir, String fileName) {
         if (!dir.exists()) {
             dir.mkdirs();
         }
         file = new File(dir.getAbsolutePath() + "/" + fileName);
+        handler = new MyHandler(FileCallBack.this);
     }
 
     @Override
@@ -76,15 +78,21 @@ public abstract class FileCallBack extends BaseCallback<File> {
         }
     }
 
-    class MyHandler extends Handler {
-        private int progress;
+    static class MyHandler extends Handler {
+        WeakReference<BaseCallback> mBaseCallback;
+        private int curProgress;
+
+        public MyHandler(BaseCallback mBaseCallback) {
+            this.mBaseCallback = new WeakReference<BaseCallback>(mBaseCallback);
+        }
 
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            if (progress != (int) msg.obj) {
-                inProgress((int) msg.obj, MAX_PROGRESS);
-                progress = (int) msg.obj;
+            BaseCallback baseCallback = mBaseCallback.get();
+            if (curProgress != (int) msg.obj) {
+                baseCallback.inProgress((int) msg.obj, MAX_PROGRESS);
+                curProgress = (int) msg.obj;
             }
         }
     }

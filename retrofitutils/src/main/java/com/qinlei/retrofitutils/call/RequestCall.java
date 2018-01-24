@@ -1,6 +1,7 @@
 package com.qinlei.retrofitutils.call;
 
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 
 
 import com.qinlei.retrofitutils.callback.BaseCallback;
@@ -35,7 +36,7 @@ public class RequestCall {
         mBaseCallback.onBefore(call);
         call.enqueue(new Callback() {
             @Override
-            public void onResponse(final Call call, final Response response) {
+            public void onResponse(@NonNull final Call call, @NonNull final Response response) {
                 try {
                     if (mBaseCallback.validateReponse(response)) {
                         //将请求成功的部分交由子线程处理
@@ -52,7 +53,7 @@ public class RequestCall {
             }
 
             @Override
-            public void onFailure(Call call, Throwable t) {
+            public void onFailure(@NonNull Call call, @NonNull Throwable t) {
                 if (call.isCanceled()) {
                     mBaseCallback.onError(call, new Throwable("Canceled!"));
                 } else {

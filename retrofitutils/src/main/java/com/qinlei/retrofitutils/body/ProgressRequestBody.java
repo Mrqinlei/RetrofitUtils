@@ -2,8 +2,10 @@ package com.qinlei.retrofitutils.body;
 
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
 
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
@@ -23,12 +25,12 @@ public class ProgressRequestBody extends RequestBody {
     //实际的待包装请求体
     private RequestBody requestBody;
     //进度回调接口
-    private ProgressRequestListener progressListener;
+    protected ProgressRequestListener progressListener;
     //包装完成的BufferedSink
     private BufferedSink bufferedSink;
-    private int MAX_PROGRESS = 100;
+    protected static int MAX_PROGRESS = 100;
     private int UPLOAD = 111111;
-    private MyHandler myHandler = new MyHandler();
+    private Handler myHandler;
 
     /**
      * 构造函数，赋值
@@ -39,6 +41,7 @@ public class ProgressRequestBody extends RequestBody {
     public ProgressRequestBody(RequestBody requestBody, ProgressRequestListener progressListener) {
         this.requestBody = requestBody;
         this.progressListener = progressListener;
+        myHandler = new MyHandler(this);
     }
 
     /**
@@ -69,7 +72,7 @@ public class ProgressRequestBody extends RequestBody {
      * @throws IOException 异常
      */
     @Override
-    public void writeTo(BufferedSink sink) throws IOException {
+    public void writeTo(@NonNull BufferedSink sink) throws IOException {
         if (bufferedSink == null) {
             //包装
             bufferedSink = Okio.buffer(sink(sink));
@@ -97,7 +100,7 @@ public class ProgressRequestBody extends RequestBody {
             long contentLength = 0L;
 
             @Override
-            public void write(Buffer source, long byteCount) throws IOException {
+            public void write(@NonNull Buffer source, long byteCount) throws IOException {
                 super.write(source, byteCount);
                 if (contentLength == 0) {
                     //获得contentLength的值，后续不再调用
@@ -116,14 +119,20 @@ public class ProgressRequestBody extends RequestBody {
         };
     }
 
-    class MyHandler extends Handler {
+    static class MyHandler extends Handler {
+        private WeakReference<ProgressRequestBody> mProgressRequestBody;
         private int progress;
+
+        public MyHandler(ProgressRequestBody mProgressRequestBody) {
+            this.mProgressRequestBody = new WeakReference<ProgressRequestBody>(mProgressRequestBody);
+        }
 
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             if (progress != (int) msg.obj) {
-                progressListener.onRequestProgress((int) msg.obj, MAX_PROGRESS);
+                ProgressRequestBody progressRequestBody = mProgressRequestBody.get();
+                progressRequestBody.progressListener.onRequestProgress((int) msg.obj, MAX_PROGRESS);
                 progress = (int) msg.obj;
             }
         }

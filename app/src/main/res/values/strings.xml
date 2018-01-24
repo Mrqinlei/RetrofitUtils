@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">RetrofitUtilsDemo</string>
+    <string name="get">get</string>
+    <string name="post">post</string>
+    <string name="postraw">postRaw</string>
+    <string name="put">put</string>
+    <string name="putraw">putRaw</string>
+    <string name="delete">delete</string>
+    <string name="upload">upload</string>
+    <string name="download">download</string>
 </resources>
