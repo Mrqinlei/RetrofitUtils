@@ -36,9 +36,9 @@ public class RetrofitUtils {
     private String requestUrl;
     private WeakHashMap<String, Object> params = new WeakHashMap<>();
     private String content;//请求体 raw 时
-    private WeakHashMap<String, File> uploads = new WeakHashMap<>();
+    private List<FileUpload> uploads = new ArrayList<>();
 
-    protected RetrofitUtils(Object tag, String requestUrl, WeakHashMap<String, Object> params, String content, WeakHashMap<String, File> uploads) {
+    protected RetrofitUtils(Object tag, String requestUrl, WeakHashMap<String, Object> params, String content, List<FileUpload> uploads) {
         this.tag = tag;
         this.requestUrl = requestUrl;
         if (params != null && params.size() != 0) {
@@ -46,7 +46,7 @@ public class RetrofitUtils {
         }
         this.content = content;
         if (uploads != null && uploads.size() != 0) {
-            this.uploads.putAll(uploads);
+            this.uploads.addAll(uploads);
         }
     }
 
@@ -56,13 +56,13 @@ public class RetrofitUtils {
      */
     private List<MultipartBody.Part> getUploadParts() {
         List<MultipartBody.Part> parts = new ArrayList<>();
-        for (Map.Entry<String, File> entry : uploads.entrySet()) {
+        for (FileUpload upload : uploads) {
             final RequestBody requestBody =
-                    RequestBody.create(MediaType.parse(MultipartBody.FORM.toString()), entry.getValue());
+                    RequestBody.create(MediaType.parse(MultipartBody.FORM.toString()), upload.getFile());
             final MultipartBody.Part body =
                     MultipartBody.Part.createFormData(
-                            entry.getKey(),
-                            entry.getValue().getName(),
+                            upload.getKey(),
+                            upload.getFile().getName(),
                             new ProgressRequestBody(requestBody, new ProgressRequestBody.ProgressRequestListener() {
                                 @Override
                                 public void onRequestProgress(int progress, int progressMax) {

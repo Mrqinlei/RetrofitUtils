@@ -194,7 +194,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void takeSuccess(File file) {
                 RetrofitUtils.upload()
-                        .url("http://api.nohttp.net/upload")
+                        .url("http://192.168.31.236/TruckAlliance/userInterface/v1/uploadBatch")
+                        .addFiles("file", file)
                         .addFiles("file", file)
                         .build()
                         .execute(new StringCallBack() {
@@ -226,6 +227,7 @@ public class MainActivity extends AppCompatActivity {
 
                             @Override
                             public void onResponse(Call call, String response) {
+                                Log.d("qinlei", "onResponse: " + response);
                                 toast("上传完成");
                             }
 

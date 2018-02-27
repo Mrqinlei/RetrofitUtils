@@ -4,6 +4,8 @@ package com.qinlei.retrofitutils;
 import com.qinlei.retrofitutils.call.RequestCall;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.WeakHashMap;
 
 /**
@@ -17,7 +19,7 @@ public class HttpBuilder {
     private String requestUrl;
     private WeakHashMap<String, Object> params = new WeakHashMap<>();
     private String content;
-    private WeakHashMap<String, File> uploads = new WeakHashMap<>();
+    private List<FileUpload> uploads = new ArrayList<>();
 
     public HttpBuilder tag(Object tag) {
         this.tag = tag;
@@ -35,7 +37,7 @@ public class HttpBuilder {
     }
 
     public HttpBuilder addFiles(String key, File value) {
-        uploads.put(key, value);
+        uploads.add(new FileUpload(key, value));
         return this;
     }
 
