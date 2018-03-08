@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.WeakHashMap;
 
+import okhttp3.RequestBody;
+
 /**
  * Created by qinlei
  * Created on 2018/1/12
@@ -20,6 +22,7 @@ public class HttpBuilder {
     private WeakHashMap<String, Object> params = new WeakHashMap<>();
     private String content;
     private List<FileUpload> uploads = new ArrayList<>();
+    private String mediaType;
 
     public HttpBuilder tag(Object tag) {
         this.tag = tag;
@@ -46,8 +49,14 @@ public class HttpBuilder {
         return this;
     }
 
+    public HttpBuilder addBody(String otherBody, String mediaType) {
+        content = otherBody;
+        this.mediaType = mediaType;
+        return this;
+    }
+
     public RequestCall build() {
-        RetrofitUtils httpClient = new RetrofitUtils(tag, requestUrl, params, content, uploads);
+        RetrofitUtils httpClient = new RetrofitUtils(tag, requestUrl, params, content, uploads, mediaType);
         return httpClient.build();
     }
 }

@@ -2,6 +2,7 @@ package com.qinlei.retrofitutils;
 
 
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import com.qinlei.retrofitutils.body.ProgressRequestBody;
 import com.qinlei.retrofitutils.call.RequestCall;
@@ -37,8 +38,9 @@ public class RetrofitUtils {
     private WeakHashMap<String, Object> params = new WeakHashMap<>();
     private String content;//请求体 raw 时
     private List<FileUpload> uploads = new ArrayList<>();
+    private String mediaType = "application/json;charset=UTF-8";
 
-    protected RetrofitUtils(Object tag, String requestUrl, WeakHashMap<String, Object> params, String content, List<FileUpload> uploads) {
+    protected RetrofitUtils(Object tag, String requestUrl, WeakHashMap<String, Object> params, String content, List<FileUpload> uploads, String mediaType) {
         this.tag = tag;
         this.requestUrl = requestUrl;
         if (params != null && params.size() != 0) {
@@ -48,10 +50,14 @@ public class RetrofitUtils {
         if (uploads != null && uploads.size() != 0) {
             this.uploads.addAll(uploads);
         }
+        if (!TextUtils.isEmpty(mediaType)) {
+            this.mediaType = mediaType;
+        }
     }
 
     /**
      * 构建上传的 MultipartBody.Part 可以上传多个文件
+     *
      * @return
      */
     private List<MultipartBody.Part> getUploadParts() {
@@ -78,6 +84,7 @@ public class RetrofitUtils {
 
     /**
      * 构建 MediaType.parse("application/json;charset=UTF-8") 的请求体
+     *
      * @return
      */
     @NonNull
@@ -85,7 +92,7 @@ public class RetrofitUtils {
         if (content == null || "".equals(content)) {
             throw new RuntimeException("build body is null");
         }
-        return RequestBody.create(MediaType.parse("application/json;charset=UTF-8"), content);
+        return RequestBody.create(MediaType.parse(mediaType), content);
     }
 
     public static HttpBuilder get() {

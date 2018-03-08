@@ -122,6 +122,25 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(Call call, String response) {
                         toast(response);
+                        Log.d("qinlei", "onResponse: "+response);
+                    }
+                });
+
+        String xml = "<xml></xml>";
+        RetrofitUtils.postRaw()
+                .url("https://api.mch.weixin.qq.com/pay/unifiedorder")
+                .addBody(xml, "application/xml;charset=UTF-8")
+                .build()
+                .execute(new StringCallBack() {
+                    @Override
+                    public void onError(Call call, Throwable e) {
+                        toast(e.getMessage());
+                    }
+
+                    @Override
+                    public void onResponse(Call call, String response) {
+                        toast(response);
+                        Log.d("qinlei", "onResponse: "+response);
                     }
                 });
     }
